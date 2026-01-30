@@ -1,0 +1,112 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>GoV Role Assigner</title>
+    <link rel="stylesheet" href="styles.css" />
+</head>
+
+<body>
+    <header>
+        <div style="display:flex;align-items:center;gap:8px;">
+            <img src="logo.png" alt="Logo" style="width:32px;height:32px;object-fit:contain;">
+            <h1 style="margin:0;font-size:18px;color:#e6eef8;">Guild of Voices Role Assigner</h1>
+        </div>
+        <div class="top-controls">
+            <button id="export-btn">Export Save File (JSON)</button>
+            <button id="import-btn">Import Save File (JSON)</button>
+            <input id="import-file" type="file" accept=".json" style="display:none;" />
+        </div>
+    </header>
+
+    <main>
+        <section class="column" id="performer-column">
+            <h2 class="top-controls" style="justify-content: space-between;">
+                Performers
+                <button id="add-performer-btn">+Add Performer</button>
+            </h2>
+            </div>
+            <div id="performer-list" class="dropzone performer-list" data-target="performerList"></div>
+            <p class="hint">Click and hold a performer to drag and drop. Click the M/F button to toggle preferred
+                gender.</p>
+        </section>
+
+        <section class="column" id="extras-column">
+            <h2 class="top-controls" style="justify-content: space-between;">
+                <div>Extras</div>
+                <div>
+                    <button id="random-assign-btn">Random Assign</button>
+                    <button id="swap-btn">Swap</button>
+                </div>
+            </h2>
+            <div id="extras-dropzone" class="dropzone extras" data-target="extras"></div>
+            <p class="hint">Only performers in the Extras category will be randomly assigned.</p>
+        </section>
+
+        <section class="column" id="character-column">
+            <div class="character-top">
+                <div class="top-controls">
+                    <select id="project-select" style="flex:1"></select>
+                    <button id="add-project-btn">+</button>
+                    <button id="delete-project-btn">🗑️</button>
+                </div>
+                <hr style="border:none;height:1px;background-color:gray;margin:16px 0;opacity:0.6;">
+                <div class="top-controls">
+                    <button id="add-character-btn">Add Character(s)</button>
+                </div>
+            </div>
+            <div id="character-list" class="character-list"></div>
+        </section>
+    </main>
+
+    <!-- Modals -->
+    <div id="modal-backdrop" class="modal-backdrop hidden"></div>
+
+    <div id="add-performers-modal" class="modal hidden">
+        <h3>Add Performer(s)</h3>
+        <p class="hint">Enter each performer on a new line, then click submit.</p>
+        <textarea id="add-performers-input" rows="6" placeholder="One performer name per line"></textarea>
+        <div class="modal-row">
+            <button id="add-performers-cancel">Cancel</button>
+            <button id="add-performers-submit">Submit</button>
+        </div>
+        <div id="add-performers-error" class="error"></div>
+    </div>
+
+    <div id="add-characters-modal" class="modal hidden">
+        <h3>Add Character(s)</h3>
+        <p class="hint">Enter each character on a new line, then click submit.</p>
+        <textarea id="add-characters-input" rows="6" placeholder="One character name per line"></textarea>
+        <div class="modal-row">
+            <button id="add-characters-cancel">Cancel</button>
+            <button id="add-characters-submit">Submit</button>
+        </div>
+        <div id="add-characters-error" class="error"></div>
+    </div>
+
+    <div id="confirm-modal" class="modal hidden">
+        <h3 id="confirm-title">Confirm</h3>
+        <p id="confirm-message"></p>
+        <div class="modal-row">
+            <button id="confirm-cancel">Cancel</button>
+            <button id="confirm-ok">OK</button>
+        </div>
+    </div>
+
+    <div id="add-project-modal" class="modal hidden">
+        <h3>Add Project</h3>
+        <input id="add-project-input" type="text" placeholder="Project name"
+            style="width:100%;padding:8px;border-radius:8px;border:1px solid rgba(255,255,255,0.08);background:var(--input-bg);color:var(--text)" />
+        <div class="modal-row">
+            <button id="add-project-cancel">Cancel</button>
+            <button id="add-project-submit">Create</button>
+        </div>
+        <div id="add-project-error" class="error"></div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+
+</html>

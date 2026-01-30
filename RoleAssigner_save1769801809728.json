@@ -1,0 +1,75 @@
+{
+  "performers": [
+    {
+      "name": "Alice",
+      "gender": "F",
+      "performed": 0
+    },
+    {
+      "name": "Bob",
+      "gender": "M",
+      "performed": 6
+    },
+    {
+      "name": "Caden",
+      "gender": "F",
+      "performed": 0
+    },
+    {
+      "name": "Dirge",
+      "gender": "M",
+      "performed": 1
+    },
+    {
+      "name": "Eddie",
+      "gender": "M",
+      "performed": 0
+    },
+    {
+      "name": "Frank",
+      "gender": "M",
+      "performed": 0
+    },
+    {
+      "name": "Gil",
+      "gender": "F",
+      "performed": 0
+    },
+    {
+      "name": "Hank",
+      "gender": "M",
+      "performed": 0
+    }
+  ],
+  "projects": [
+    {
+      "name": "Cool Webcomic",
+      "characters": [
+        {
+          "name": "Qqqq",
+          "gender": "M"
+        },
+        {
+          "name": "Wwww",
+          "gender": "F"
+        },
+        {
+          "name": "Yyyy",
+          "gender": "F"
+        },
+        {
+          "name": "Zzzz",
+          "gender": "F"
+        },
+        {
+          "name": "Xxxx",
+          "gender": "F"
+        },
+        {
+          "name": "Nnnn",
+          "gender": "M"
+        }
+      ]
+    }
+  ]
+}
