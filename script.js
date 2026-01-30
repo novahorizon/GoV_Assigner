@@ -7,7 +7,7 @@
     let projectIdCounter = 1;
     let characterIdCounter = 1;
     // set when loading an existing file to the Date when it was originally saved
-    let seshDate = null
+    let seshDate = new Date()
 
     const performers = {}; // id -> {id,name,gender,performed,everAssignedThisSession}
     const projects = []; // {id,name,characters:[{id,name,gender,assigned:null}]}
@@ -563,12 +563,31 @@
     });
 
     // --- Random assignment logic ---
-    function randomAssign(prioritizeUnassigned = false, previouslyAssignedSet = new Set()) {
+    function randomAssign(prioritizeUnassigned = false, previouslyAssigned = new Set()) {
         const proj = projects.find(p => p.id === currentProjectId);
         if (!proj) return;
+
+        // Move all current assignments to Extras
+        for (const ch of proj.characters) {
+            if (ch.assigned) {
+                extras.add(ch.assigned);
+                ch.assigned = null;
+            }
+        }
+        
         // For each character attempt to choose from extras matching gender
         for (const ch of proj.characters) {
-            const candidates = Array.from(extras).filter(pid => performers[pid] && performers[pid].gender === ch.gender);
+            let candidates = []
+            if(prioritizeUnassigned) {
+                candidates = Array.from(extras).filter(pid =>
+                    performers[pid] && performers[pid].gender === ch.gender && !previouslyAssigned.has(pid)
+                );
+            }
+            if (candidates.length === 0) {
+                candidates = Array.from(extras).filter(pid =>
+                    performers[pid] && performers[pid].gender === ch.gender
+                );
+            }
             if (candidates.length === 0) {
                 console.log(`[RANDOM] No candidates for character "${ch.name}" (gender ${ch.gender}).`);
                 continue;
@@ -579,10 +598,6 @@
             candidates.forEach(pid => {
                 const perf = performers[pid];
                 let baseWeight = (10 - perf.performed); // 1..10
-                if (prioritizeUnassigned) {
-                    // priority to performers NOT in previouslyAssignedSet
-                    baseWeight = baseWeight * (previouslyAssignedSet.has(pid) ? 1 : 2);
-                }
                 weights[pid] = baseWeight;
                 totalWeight += baseWeight;
             });
@@ -620,54 +635,7 @@
                 ch.assigned = null;
             }
         }
-
-        // assign extras with priority
-        for (const ch of proj.characters) {
-            // --- Phase 1: Extras pool (gender-matched) ---
-            let pool = Array.from(extras).filter(pid =>
-                performers[pid] && performers[pid].gender === ch.gender && !previouslyAssigned.has(pid)
-            );
-
-            if (pool.length === 0) {
-                pool = Array.from(extras).filter(pid =>
-                    performers[pid] && performers[pid].gender === ch.gender
-                );
-            }
-
-            if (pool.length === 0) {
-                console.log(`[SWAP] No candidates for "${ch.name}" (${ch.gender})`);
-                continue;
-            }
-
-            // ---- Weighted penalty logic using Performed ----
-            const weights = {};
-            let totalWeight = 0;
-
-            pool.forEach(pid => {
-                const perf = performers[pid];
-                const weight = (10 - perf.performed); // 1..10
-                weights[pid] = weight;
-                totalWeight += weight;
-            });
-
-            // Debug logging
-            console.log(`Character: ${ch.name}`);
-            pool.forEach(pid => {
-                const p = performers[pid];
-                const prob = weights[pid] / totalWeight;
-                console.log(`  ${p.name}: ${(prob * 100).toFixed(2)}%`);
-            });
-
-            // Weighted random pick
-            const pick = weightedRandomPick(weights, totalWeight);
-
-            // Assign
-            ch.assigned = pick;
-            extras.delete(pick);
-            performers[pick].everAssignedThisSession = true;
-        }
-
-        renderAll();
+        randomAssign(true, previouslyAssigned)
     }
 
     function weightedRandomPick(weights, total) {
