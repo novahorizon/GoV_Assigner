@@ -11,7 +11,7 @@
 
     const performers = {}; // id -> {id,name,gender,performed,everAssignedThisSession}
     const projects = []; // {id,name,characters:[{id,name,gender,assigned:null}]}
-    const extras = new Set(); // performer ids currently in extras pool
+    let extras = new Set(); // performer ids currently in extras pool
 
     let currentProjectId = null;
 
@@ -28,6 +28,13 @@
         const id = 'proj' + (projectIdCounter++);
         projects.push({ id, name, characters: [] });
         if (!currentProjectId) currentProjectId = id;
+
+        // Move all currently assigned characters back to extras before switching
+        const old = projects.find(p => p.id === currentProjectId);
+        if (old) {
+            for (const ch of old.characters) if (ch.assigned) { extras.add(ch.assigned); ch.assigned = null; }
+        }
+
         return id;
     }
     function newCharacter(projectId, name, gender = 'M') {
@@ -130,24 +137,14 @@
     function renderExtras() {
         const container = $('#extras-dropzone');
         container.innerHTML = '';
-        const arr = Array.from(extras).sort((aId, bId) => {
-            const a = performers[aId];
-            const b = performers[bId];
-
-            // Gender priority: M first, F second
-            if (a.gender !== b.gender) {
-                if (a.gender === 'M') return -1;
-                if (b.gender === 'M') return 1;
-            }
-
-            // Same gender → alphabetical by name
-            return a.name.localeCompare(b.name, undefined, { sensitivity: 'base' });
-        });
+        const arr = Array.from(extras)
         if (!arr.length) {
             container.innerHTML = `<div class="empty">No performers in Extras.</div>`;
             return;
         }
+        let orderNum = 0
         arr.forEach(id => {
+            orderNum++;
             const p = performers[id];
             if (!p) return;
             const item = document.createElement('div');
@@ -156,6 +153,7 @@
             item.dataset.id = id;
             item.innerHTML = `
         <div class="item-left">
+            <div style="text-align:center;background-color:var(--muted);color:var(--bg);width:26px;border-radius:50%;padding:2px">${orderNum}</div>
             <div class="item-name">${escapeHtml(p.name)}</div>
             <button class="gender-btn ${p.gender === 'M' ? 'gender-m' : 'gender-f'}" data-action="toggle-gender">${p.gender}</button>
         </div>
@@ -563,6 +561,20 @@
     });
 
     // --- Random assignment logic ---
+    function shuffleExtras() {
+        // Step 1: Convert to array
+        const arr = Array.from(extras);
+
+        // Step 2: Shuffle array using Fisher–Yates algorithm
+        for (let i = arr.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [arr[i], arr[j]] = [arr[j], arr[i]]; // swap
+        }
+
+        // Step 3: Convert back to Set (optional)
+        extras = new Set(arr);
+    }
+
     function randomAssign(prioritizeUnassigned = false, previouslyAssigned = new Set()) {
         const proj = projects.find(p => p.id === currentProjectId);
         if (!proj) return;
@@ -574,11 +586,11 @@
                 ch.assigned = null;
             }
         }
-        
+
         // For each character attempt to choose from extras matching gender
         for (const ch of proj.characters) {
             let candidates = []
-            if(prioritizeUnassigned) {
+            if (prioritizeUnassigned) {
                 candidates = Array.from(extras).filter(pid =>
                     performers[pid] && performers[pid].gender === ch.gender && !previouslyAssigned.has(pid)
                 );
@@ -615,6 +627,7 @@
             extras.delete(pick);
             performers[pick].everAssignedThisSession = true;
         }
+        shuffleExtras()
         renderAll();
     }
 
@@ -656,7 +669,7 @@
         for (const id in performers) {
             const p = performers[id];
             let newPerformed = p.performed
-            if(!isToday(seshDate)) {
+            if (!isToday(seshDate)) {
                 newPerformed = p.everAssignedThisSession ? clamp(p.performed + 1, 0, 9) : clamp(p.performed - 1, 0, 9);
             }
             p.performed = newPerformed; // update internal state
