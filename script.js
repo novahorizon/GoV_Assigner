@@ -211,6 +211,7 @@
             <button class="gender-btn ${ch.gender === 'M' ? 'gender-m' : 'gender-f'}" data-action="toggle-g">${ch.gender}</button>
           </div>
           <div>
+            <button class="small-btn" data-action="random-char">🎲</button>
             <button class="delete-btn" data-action="delete-char">🔪</button>
           </div>
         </div>
@@ -228,6 +229,37 @@
             });
             card.querySelector('[data-action="delete-char"]').addEventListener('click', () => {
                 confirmAction(`Delete character "${ch.name}"?`, () => deleteCharacter(ch.id));
+            });
+            card.querySelector('[data-action="random-char"]').addEventListener('click', () => {
+                // Find all extras matching this character's gender
+                const candidates = Array.from(extras).filter(pid => performers[pid] && performers[pid].gender === ch.gender);
+                if (candidates.length === 0) {
+                    console.log(`No available performers in Extras for gender ${ch.gender}.`);
+                    return;
+                }
+                // Weighted random pick using performed penalty
+                let totalWeight = 0;
+                const weights = {};
+                candidates.forEach(entry => {
+                    const perf = performers[entry];
+                    const weight = 10 - perf.performed; // 1..10
+                    weights[entry] = weight;
+                    totalWeight += weight;
+                });
+
+                // Debug log
+                console.log(`Character: ${ch.name}`);
+                candidates.forEach(entry => {
+                    const p = performers[entry];
+                    console.log(weights[entry])
+                    console.log(totalWeight)
+                    const prob = weights[entry] / totalWeight;
+                    console.log(`  ${p.name}: ${(prob * 100).toFixed(2)}%`);
+                });
+
+                // Pick a performer
+                const pickIdx = weightedRandomPick(weights, totalWeight);
+                dropOntoCharacter(pickIdx, ch.id);
             });
 
             container.appendChild(card);
@@ -323,6 +355,10 @@
         extras.delete(performerId);
         const prevChar = findCharacterByAssignedPerformer(performerId);
         if (prevChar) prevChar.assigned = null;
+        // If this character already has a performer assigned, send them to Extras
+        if (ch.assigned) {
+            extras.add(ch.assigned);
+        }
         ch.assigned = performerId;
         // mark as assigned this session
         performers[performerId].everAssignedThisSession = true;
