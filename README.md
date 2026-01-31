@@ -11,4 +11,4 @@ Installation:
 <img width="2536" height="1262" alt="image" src="https://github.com/user-attachments/assets/ff1ac146-5e44-4ebd-9c61-e7d221054a4a" />
 
 Notes:
-- The random selection algorithm prioritizes people who were not assigned to main cast members. If you want to manually reset the penalty that a frequent reader receives, you can edit the .json file and set the "performed" value back to 0. The performed value only increments once per day, using the timestamp of the last loaded save as reference. 
+- The random selection algorithm prioritizes people who were not assigned to main cast members. If you want to manually reset the penalty that a frequent reader receives, you can edit the .json file and set the "performed" value back to 0. This value is incremented by 1 if a performer was assigned to a character during the session (Max 9), and is decremented if they were inactive or only played extras. This value is recalculated when the file is saved, but only once per day. It references the timestamp in the filename of the last loaded save for this (and will alwways trigger on the first save if no save has been previously loaded.)

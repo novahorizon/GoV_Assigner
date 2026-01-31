@@ -7,7 +7,7 @@
     let projectIdCounter = 1;
     let characterIdCounter = 1;
     // set when loading an existing file to the Date when it was originally saved
-    let seshDate = new Date()
+    let seshDate = null
 
     const performers = {}; // id -> {id,name,gender,performed,everAssignedThisSession}
     const projects = []; // {id,name,characters:[{id,name,gender,assigned:null}]}
@@ -705,7 +705,7 @@
         for (const id in performers) {
             const p = performers[id];
             let newPerformed = p.performed
-            if (!isToday(seshDate)) {
+            if (!seshDate || !isToday(seshDate)) {
                 newPerformed = p.everAssignedThisSession ? clamp(p.performed + 1, 0, 9) : clamp(p.performed - 1, 0, 9);
             }
             p.performed = newPerformed; // update internal state
