@@ -50,11 +50,12 @@
                 <div class="top-controls">
                     <select id="project-select" style="flex:1"></select>
                     <button id="add-project-btn">+</button>
+                    <button id="edit-project-btn">✏️</button>
                     <button style="background-color:var(--danger) !important" id="delete-project-btn">🗑️</button>
                 </div>
                 <hr style="border:none;height:1px;background-color:gray;margin:16px 0;opacity:0.6;">
                 <div class="top-controls">
-                    <button id="add-character-btn">Add Character(s)</button>
+                    <button id="add-character-btn" style="margin-bottom:8px">Add Character(s)</button>
                 </div>
             </div>
             <div id="character-list" class="character-list"></div>
@@ -104,6 +105,28 @@
             <button id="add-project-submit">Create</button>
         </div>
         <div id="add-project-error" class="error"></div>
+    </div>
+
+    <div id="edit-project-modal" class="modal hidden">
+        <h3>Edit Project</h3>
+        <input id="edit-project-input" type="text" placeholder="Project name"
+            style="width:100%;padding:8px;border-radius:8px;border:1px solid rgba(255,255,255,0.08);background:var(--input-bg);color:var(--text)" />
+        <div class="modal-row">
+            <button id="edit-project-cancel">Cancel</button>
+            <button id="edit-project-submit">Save</button>
+        </div>
+        <div id="edit-project-error" class="error"></div>
+    </div>
+
+    <div id="edit-performer-modal" class="modal hidden">
+        <h3>Edit Performer Name</h3>
+        <input id="edit-performer-input" type="text" placeholder="Performer name"
+            style="width:100%;padding:8px;border-radius:8px;border:1px solid rgba(255,255,255,0.08);background:var(--input-bg);color:var(--text)" />
+        <div class="modal-row">
+            <button id="edit-performer-cancel">Cancel</button>
+            <button id="edit-performer-submit">Save</button>
+        </div>
+        <div id="edit-performer-error" class="error"></div>
     </div>
 
     <script src="script.js"></script>

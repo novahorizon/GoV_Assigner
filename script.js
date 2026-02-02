@@ -19,6 +19,12 @@
     const $ = (sel) => document.querySelector(sel);
     const $$ = (sel) => Array.from(document.querySelectorAll(sel));
 
+    function editPerformerName(oldName, newName) {
+        const id = Object.entries(performers).find(
+            ([_, value]) => value.name === oldName
+        )?.[0];
+        performers[id].name = newName;
+    }
     function newPerformer(name, gender = 'M', performed = 0) {
         const id = 'p' + (performerIdCounter++);
         performers[id] = { id, name, gender, performed: clamp(performed, 0, 9), everAssignedThisSession: false };
@@ -107,6 +113,7 @@
         </div>
         <div>
           <button class="small-btn" data-action="to-extras">⇉</button>
+          <button class="small-btn" data-action="edit-performer">✏️</button>
           <button class="delete-btn" data-action="delete">X</button>
         </div>
       `;
@@ -125,6 +132,13 @@
             item.querySelector('[data-action="to-extras"]').addEventListener('click', () => {
                 moveToExtras(p.id);
                 renderAll()
+            });
+            item.querySelector('[data-action="edit-performer"]').addEventListener('click', () => {
+                $('#edit-performer-input').value = p.name;
+                $('#edit-performer-error').textContent = '';
+                $('#edit-performer-input').placeholder = p.name;
+                openModal('#edit-performer-modal');
+                $('#edit-performer-input').focus();
             });
             item.querySelector('[data-action="delete"]').addEventListener('click', () => {
                 confirmAction(`Delete performer "${p.name}"?`, () => deletePerformer(p.id));
@@ -455,6 +469,7 @@
         $('#add-performers-input').value = '';
         $('#add-performers-error').textContent = '';
         openModal('#add-performers-modal');
+        $('#add-performers-input').focus();
     });
     $('#add-performers-cancel').addEventListener('click', () => closeModal('#add-performers-modal'));
     $('#add-performers-submit').addEventListener('click', () => {
@@ -483,6 +498,7 @@
         $('#add-project-input').value = '';
         $('#add-project-error').textContent = '';
         openModal('#add-project-modal');
+        $('#add-project-input').focus();
     });
 
     $('#add-project-cancel').addEventListener('click', () => {
@@ -514,11 +530,48 @@
     });
 
 
+    // --- Edit Project Modal Logic ---
+    $('#edit-project-btn').addEventListener('click', () => {
+        const proj = projects.find(p => p.id === currentProjectId);
+        if (!proj) return;
+        $('#edit-project-input').value = proj.name;
+        $('#edit-project-input').placeholder = proj.name;
+        $('#edit-project-error').textContent = '';
+        openModal('#edit-project-modal');
+        $('#edit-project-input').focus();
+    });
+
+    $('#edit-project-cancel').addEventListener('click', () => {
+        closeModal('#edit-project-modal');
+    });
+
+    $('#edit-project-submit').addEventListener('click', () => {
+        const newName = $('#edit-project-input').value.trim();
+        const err = $('#edit-project-error');
+        err.textContent = '';
+        if (!newName) {
+            err.textContent = 'Project name cannot be empty.';
+            return;
+        }
+        // Prevent duplicate names (excluding current project)
+        const exists = projects.some(p => p.id !== currentProjectId && p.name.toLowerCase() === newName.toLowerCase());
+        if (exists) {
+            err.textContent = 'A project with this name already exists.';
+            return;
+        }
+        const proj = projects.find(p => p.id === currentProjectId);
+        if (!proj) return;
+        proj.name = newName;
+        closeModal('#edit-project-modal');
+        renderAll();
+    });
+
     // Add characters modal logic
     $('#add-character-btn').addEventListener('click', () => {
         $('#add-characters-input').value = '';
         $('#add-characters-error').textContent = '';
         openModal('#add-characters-modal');
+        $('#add-characters-input').focus();
     });
     $('#add-characters-cancel').addEventListener('click', () => closeModal('#add-characters-modal'));
     $('#add-characters-submit').addEventListener('click', () => {
@@ -539,6 +592,22 @@
         }
         lines.forEach(name => newCharacter(currentProjectId, name, 'M'));
         closeModal('#add-characters-modal');
+        renderAll();
+    });
+
+    // Edit performers modal logic
+    $('#edit-performer-cancel').addEventListener('click', () => closeModal('#edit-performer-modal'));
+    $('#edit-performer-submit').addEventListener('click', () => {
+        const oldName = $('#edit-performer-input').placeholder;
+        const newName = $('#edit-performer-input').value.trim();
+        const err = $('#edit-performer-error');
+        err.textContent = '';
+        if (newName.length < 1) { err.textContent = 'Please enter a name.'; return; }
+        // check against existing performers
+        const exists = Object.values(performers).some(p => p.name.toLowerCase() === newName.toLowerCase() && p.name.toLowerCase() !== oldName.toLowerCase());
+        if (exists) { err.textContent = `Performer "${newName}" already exists.`; return; }
+        editPerformerName(oldName, newName);
+        closeModal('#edit-performer-modal');
         renderAll();
     });
 
