@@ -10,7 +10,7 @@
   /* primary text */
   --accent: #38c6b8;
   /* teal accent */
-  --danger: #ff6b5b;
+  --danger: #8a2b2b;
   /* danger / delete */
   --border: rgba(255, 255, 255, 0.06);
   /* subtle borders */
@@ -212,7 +212,7 @@ main {
 .character-list {
   display: flex;
   flex-direction: column;
-  gap: 8px
+  gap: 4px
 }
 
 .character-card {
@@ -235,11 +235,11 @@ main {
 
 .character-dropzone {
   min-height: 48px;
-  padding: 8px;
+  padding: 3px;
   border-radius: 8px;
   border: 1px dashed var(--dropzone-border);
   background: linear-gradient(180deg, rgba(255, 255, 255, 0.01), transparent);
-  margin-top: 8px;
+  margin-top: 0px;
   display: flex;
   flex-direction: column;
   gap: 6px;
@@ -392,10 +392,10 @@ header h1 {
 .performer-item,
 .extra-item,
 .character-card {
-  padding: 6px;
+  padding: 3px;
   border-radius: 6px;
   gap: 6px;
-  margin-bottom: 6px;
+  margin-bottom:1px;
 }
 
 /* Buttons */
