@@ -812,7 +812,7 @@
         const saveDate = Date.now();
         if(!loadedFileName) {
             loadedFileName = fileName;
-            loadedFileSaveDate = saveDate;
+            loadedFileSaveDate = new Date(parseInt(saveDate));
         }
         const blob = new Blob([JSON.stringify({ saveDate: saveDate, performers: outPerformers, projects: outProjects }, null, 2)], { type: 'application/json' });
         const url = URL.createObjectURL(blob);
