@@ -1,0 +1,144 @@
+{
+  "saveDate": 1770267902740,
+  "lastUpdated": 1770267902740,
+  "performers": [
+    {
+      "name": "Eddie",
+      "gender": "M",
+      "performed": 1,
+      "lastPerformed": 1770267598668
+    },
+    {
+      "name": "Johanna",
+      "gender": "M",
+      "performed": 1,
+      "lastPerformed": 1770267598668
+    },
+    {
+      "name": "Ethelinda",
+      "gender": "F",
+      "performed": 1,
+      "lastPerformed": 1770267598668
+    },
+    {
+      "name": "Lidia",
+      "gender": "F",
+      "performed": 1,
+      "lastPerformed": 1770267598668
+    },
+    {
+      "name": "Trudie",
+      "gender": "F",
+      "performed": 0,
+      "lastPerformed": 0
+    },
+    {
+      "name": "Mellán",
+      "gender": "F",
+      "performed": 1,
+      "lastPerformed": 1770267598668
+    },
+    {
+      "name": "Sluaghadhán",
+      "gender": "M",
+      "performed": 0,
+      "lastPerformed": 0
+    },
+    {
+      "name": "Efthymios",
+      "gender": "M",
+      "performed": 1,
+      "lastPerformed": 1770267598668
+    },
+    {
+      "name": "Riad",
+      "gender": "F",
+      "performed": 0,
+      "lastPerformed": 0
+    },
+    {
+      "name": "Ala",
+      "gender": "F",
+      "performed": 1,
+      "lastPerformed": 1770267598668
+    },
+    {
+      "name": "Raheem",
+      "gender": "M",
+      "performed": 0,
+      "lastPerformed": 0
+    },
+    {
+      "name": "Silvestre",
+      "gender": "M",
+      "performed": 0,
+      "lastPerformed": 0
+    },
+    {
+      "name": "Mira",
+      "gender": "F",
+      "performed": 1,
+      "lastPerformed": 1770267902740
+    },
+    {
+      "name": "Ramakant",
+      "gender": "M",
+      "performed": 1,
+      "lastPerformed": 1770267598668
+    },
+    {
+      "name": "Chandrasekhar",
+      "gender": "M",
+      "performed": 1,
+      "lastPerformed": 1770267598668
+    },
+    {
+      "name": "Kostadin",
+      "gender": "M",
+      "performed": 1,
+      "lastPerformed": 1770267598668
+    }
+  ],
+  "projects": [
+    {
+      "name": "Example Project",
+      "characters": [
+        {
+          "name": "Special Week",
+          "gender": "F"
+        },
+        {
+          "name": "Tokai Teio",
+          "gender": "F"
+        },
+        {
+          "name": "Gold Ship",
+          "gender": "F"
+        },
+        {
+          "name": "Haru Urara",
+          "gender": "F"
+        },
+        {
+          "name": "Kiryu Kazuma",
+          "gender": "M"
+        },
+        {
+          "name": "Torena",
+          "gender": "M"
+        },
+        {
+          "name": "Mysterious Man",
+          "gender": "M"
+        },
+        {
+          "name": "Announcer",
+          "gender": "M"
+        }
+      ]
+    }
+  ],
+  "settings": {
+    "separateMF": true
+  }
+}
