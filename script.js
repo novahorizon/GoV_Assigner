@@ -221,25 +221,36 @@
             return a.name.localeCompare(b.name, undefined, { sensitivity: 'base' });
         });
 
-        sortedCharacters.forEach(ch => {
-            const card = document.createElement('div');
-            card.className = 'character-card';
-            card.dataset.charId = ch.id;
-            card.innerHTML = `
-        <div class="character-top-row">
-          <div style="display:flex;align-items:center;gap:8px">
-            <strong>${escapeHtml(ch.name)}</strong>
-            <button class="gender-btn ${ch.gender === 'M' ? 'gender-m' : 'gender-f'}" data-action="toggle-g">${ch.gender}</button>
-          </div>
-          <div>
-            <button class="small-btn" data-action="random-char">🎲</button>
-            <button class="delete-btn" data-action="delete-char">🔪</button>
-          </div>
-        </div>
-        <div class="character-dropzone dropzone" data-target="character" data-charid="${ch.id}">
-          ${ch.assigned ? renderAssignedPerformerInline(ch.assigned) : '<div class="small-muted">Drop performer here</div>'}
-        </div>
-      `;
+                sortedCharacters.forEach(ch => {
+                        const card = document.createElement('div');
+                        card.className = 'character-card';
+                        card.dataset.charId = ch.id;
+                        // build image path relative to index.html: images/<Project Name>/<Character Name>.png
+                        const proj = projects.find(p => p.id === currentProjectId) || { name: '' };
+                        const imgPath = `images/${encodeURIComponent(proj.name)}/${encodeURIComponent(ch.name)}.png`;
+                        card.innerHTML = `
+                <div class="character-row">
+                    <div class="character-image">
+                        <img src="${imgPath}" alt="${escapeHtml(ch.name)}" onerror="this.style.display='none'; this.parentNode.querySelector('.no-image').style.display='flex'" />
+                        <div class="no-image small-muted" style="display:none;">No Image Found</div>
+                    </div>
+                    <div class="character-main">
+                        <div class="character-top-row">
+                            <div style="display:flex;align-items:center;gap:8px">
+                                <strong>${escapeHtml(ch.name)}</strong>
+                                <button class="gender-btn ${ch.gender === 'M' ? 'gender-m' : 'gender-f'}" data-action="toggle-g">${ch.gender}</button>
+                            </div>
+                            <div>
+                                <button class="small-btn" data-action="random-char">🎲</button>
+                                <button class="delete-btn" data-action="delete-char">🔪</button>
+                            </div>
+                        </div>
+                        <div class="character-dropzone dropzone" data-target="character" data-charid="${ch.id}">
+                            ${ch.assigned ? renderAssignedPerformerInline(ch.assigned) : '<div class="small-muted">Drop performer here</div>'}
+                        </div>
+                    </div>
+                </div>
+            `;
             // attach event listeners for delete/toggle/unassign
             card.querySelector('[data-action="toggle-g"]').addEventListener('click', (e) => {
                 ch.gender = ch.gender === 'M' ? 'F' : 'M';
