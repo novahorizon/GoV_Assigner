@@ -231,7 +231,7 @@
                         card.innerHTML = `
                 <div class="character-row">
                     <div class="character-image">
-                        <img src="${imgPath}" alt="${escapeHtml(ch.name)}" onerror="this.style.display='none'; this.parentNode.querySelector('.no-image').style.display='flex'" />
+                        <img src="${imgPath}" alt="${escapeHtml(ch.name)}" style="display:none;" onload="this.style.display='block'" onerror="this.style.display='none'; this.parentNode.querySelector('.no-image').style.display='flex'" />
                         <div class="no-image small-muted" style="display:none;">No Image Found</div>
                     </div>
                     <div class="character-main">
