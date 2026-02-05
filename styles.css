@@ -267,6 +267,11 @@ main {
   justify-content: center;
   color: var(--muted);
   font-size: 12px;
+  cursor: pointer;
+  transition: background-color 0.15s ease;
+}
+.no-image:hover {
+  background-color: rgba(0, 0, 0, 0.3);
 }
 
 .char-controls {

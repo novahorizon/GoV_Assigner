@@ -232,7 +232,7 @@
                 <div class="character-row">
                     <div class="character-image">
                         <img src="${imgPath}" alt="${escapeHtml(ch.name)}" style="display:none;" onload="this.style.display='block'" onerror="this.style.display='none'; this.parentNode.querySelector('.no-image').style.display='flex'" />
-                        <div class="no-image small-muted" style="display:none;">No Image Found</div>
+                        <div class="no-image small-muted" style="display:none;" data-img-path="${imgPath}" data-project="${escapeHtml(proj.name)}" data-character="${escapeHtml(ch.name)}">No Image Found</div>
                     </div>
                     <div class="character-main">
                         <div class="character-top-row">
@@ -262,6 +262,28 @@
             card.querySelector('[data-action="delete-char"]').addEventListener('click', () => {
                 confirmAction(`Delete character "${ch.name}"?`, () => deleteCharacter(ch.id));
             });
+            
+            // handle no-image click to show modal with expected path
+            const noImageEl = card.querySelector('.no-image');
+            if (noImageEl) {
+                noImageEl.addEventListener('click', () => {
+                    const project = noImageEl.dataset.project;
+                    const character = noImageEl.dataset.character;
+                    const displayPath = `images/${project}/${character}.png`;
+                    const modal = $('#image-not-found-modal');
+                    $('#modal-backdrop').classList.remove('hidden');
+                    modal.classList.remove('hidden');
+                    $('#image-not-found-message').textContent = `Image not found. Check that you put your image at ${displayPath}`;
+                    const closeBtn = $('#image-not-found-close');
+                    function cleanup() {
+                        modal.classList.add('hidden');
+                        $('#modal-backdrop').classList.add('hidden');
+                        closeBtn.removeEventListener('click', cleanup);
+                    }
+                    closeBtn.addEventListener('click', cleanup);
+                });
+            }
+            
             card.querySelector('[data-action="random-char"]').addEventListener('click', () => {
                 // Find all extras matching this character's gender
                 const candidates = Array.from(extras).filter(pid => performers[pid] && performers[pid].gender === ch.gender);
